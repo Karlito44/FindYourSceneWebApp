@@ -99,7 +99,7 @@ function Row(props) {
                         ))}
                       </TableCell>
                       <TableCell>
-                      {detail.actors.map((actor, index) => (
+                        {detail.actors.map((actor, index) => (
                           <div key={uuid_v4()}>
                             {index + 1 === detail.actors.length ? actor : actor + ", "}
                           </div>
@@ -147,7 +147,7 @@ export default function TableFilms({ listFilms }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -173,16 +173,17 @@ export default function TableFilms({ listFilms }) {
           {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
             <Row key={uuid_v4()} row={row} adresse="https://www.google.com/maps/search/?api=1&query=6+rue+louis+pergaut" />
           ))}
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[2, 4]}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </TableRow>
         </TableBody>
-        <TablePagination
-          rowsPerPageOptions={[2, 4]}
-          count={rows.length}
-          // component="tfoot"
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
       </Table>
     </TableContainer>
   );
