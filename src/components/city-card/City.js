@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function CityCard({listFilms, title, description, image}) {
+export default function CityCard({listFilms, city, title, description, image}) {
 
     const classes = useStyles();
 
@@ -40,7 +40,7 @@ export default function CityCard({listFilms, title, description, image}) {
             </CardActionArea>
             {/* <CardActions> */}
                 <div id="button">
-                <SimpleModal listFilms={listFilms} title={"Liste des films de la ville de " + title} buttonName="Consulter les films" />
+                <SimpleModal listFilms={listFilms} city={city} title={"Liste des films de la ville de " + title} buttonName="Consulter les films" />
                 </div>
             {/* </CardActions> */}
         </Card>

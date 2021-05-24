@@ -26,7 +26,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(title, production, type, genre, language, date, plot, address, actors, released) {
+function createData(title, production, type, genre, language, date, plot, address, actors) {
   return {
     title,
     production,
@@ -34,65 +34,38 @@ function createData(title, production, type, genre, language, date, plot, addres
     genre,
     language,
     details: [
-      { date, plot, address, actors, released }
+      { date, plot, address, actors }
     ],
   };
 }
 
-const requestData = async (query) => {
-  const SparqlClient = require('sparql-http-client')
-  const endpointUrl = 'http://localhost:3030/FindYourScene'
-
-  const client = new SparqlClient({ endpointUrl })
-  const stream = await client.query.select(query)
-  var tab = []
-
-  stream.on('data', row => {
-      tab.push(row)
-  })
-
-  stream.on('error', err => {
-      console.error(err);
-  })
-
-  return tab
-}
-
 function Row(props) {
-  const { row, adresse } = props;
+  const { film, city } = props;
   const [open, setOpen] = React.useState(false);
 
   const classes = useRowStyles();
 
-  const showDetails = () => {
-    const query = `
-
-    `
-    requestData(query).then(function(result){
-
-    })
-
-    setOpen(!open)
-  }
-
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
+      {/* <TableRow > */}
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.title}
+          {film.title.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + film.title.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}
         </TableCell>
-        <TableCell align="right">{row.production}</TableCell>
-        <TableCell align="right">{row.type}</TableCell>
-        <TableCell align="right">{row.genre}</TableCell>
-        <TableCell align="right">{row.language}</TableCell>
-        <TableCell align="right">
+        <TableCell align="left">{film.production.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + film.production.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}</TableCell>
+        <TableCell align="left">{film.type.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + film.type.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}</TableCell>
+        <TableCell align="left">{film.genre.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + film.genre.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}</TableCell>
+        <TableCell align="left">{film.language.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + film.language.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}</TableCell>
+        <TableCell align="left">
           <Button variant="contained" size="small" color="primary" >
-            <a className="link" href={adresse} target="_blank" rel="noreferrer">Trouver la scène</a>
+            {/* {film.details.map((detail)=> { */}
+              <a className="link" href={"https://www.google.com/maps/search/?api=1&query=" + film.details[0].address.value + "+" + city} target="_blank" rel="noreferrer">Trouver la scène</a>
+            {/* })} */}
           </Button>
         </TableCell>
       </TableRow>
@@ -102,38 +75,26 @@ function Row(props) {
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
                 Détails
-              </Typography>
+        </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
                     <TableCell>Date</TableCell>
                     <TableCell align="left">Résumé</TableCell>
-                    <TableCell align="left">Réalisateur(s)</TableCell>
                     <TableCell align="left">Acteur(s)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.details.map((detail) => (
+                  {film.details.map((detail) => (
                     <TableRow key={uuid_v4()}>
-                      <TableCell>
-                        {detail.date}
+                      <TableCell align="left">
+                        {detail.date.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + detail.date.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}
                       </TableCell>
-                      <TableCell>
-                        {detail.plot}
+                      <TableCell align="left">
+                        {detail.plot.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + detail.plot.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}
                       </TableCell>
-                      <TableCell>
-                        {detail.released.map((realisator, index) => (
-                          <div key={uuid_v4()}>
-                            {index + 1 === detail.released.length ? realisator : realisator + ", "}
-                          </div>
-                        ))}
-                      </TableCell>
-                      <TableCell>
-                        {detail.actors.map((actor, index) => (
-                          <div key={uuid_v4()}>
-                            {index + 1 === detail.actors.length ? actor : actor + ", "}
-                          </div>
-                        ))}
+                      <TableCell align="left">
+                        {detail.actors.value.replaceAll("_"," ").replaceAll("�","é").charAt(0).toUpperCase() + detail.actors.value.slice(1).replaceAll("_"," ").replaceAll("�","é")}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -147,38 +108,15 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    production: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    language: PropTypes.string.isRequired
-  }).isRequired,
-};
 
-const rows = [
-  createData('L\'Attaque des titans', "Studio Kaze", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Demon Slayer', "Studio Ina", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Dragon Ball Super', "Studio Baba", "Shojo", "Combat", "Française", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('L\'Attaque des titans', "Studio Kaze", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Demon Slayer', "Studio Ina", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Dragon Ball Super', "Studio Baba", "Shojo", "Combat", "Française", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('L\'Attaque des titans', "Studio Kaze", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Demon Slayer', "Studio Ina", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Dragon Ball Super', "Studio Baba", "Shojo", "Combat", "Française", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('L\'Attaque des titans', "Studio Kaze", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Demon Slayer', "Studio Ina", "Shonen", "Combat", "Japonaise", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"]),
-  createData('Dragon Ball Super', "Studio Baba", "Shojo", "Combat", "Française", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"])
-];
-
-export default function TableFilms({ parisFilms }) {
+export default function TableFilms({ listFilms, city }) {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    console.log("page:", page)
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -186,7 +124,10 @@ export default function TableFilms({ parisFilms }) {
     setPage(0);
   };
 
-  console.log("PARIS:", parisFilms)
+  var films = []
+  listFilms.map(elem => {
+    films.push(createData(elem.labelFilm, elem.labelProduction, elem.labelType, elem.labelGenre, elem.langue, elem.date, elem.resume, elem.adresse, elem.labelActeur))
+  })
 
   return (
     <TableContainer className="table" component={Paper}>
@@ -202,13 +143,13 @@ export default function TableFilms({ parisFilms }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-            <Row key={uuid_v4()} row={row} adresse="https://www.google.com/maps/search/?api=1&query=6+rue+louis+pergaut" />
+          {films.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((film) => (
+            <Row key={uuid_v4()} film={film} city={city} />
           ))}
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[2, 4]}
-              count={rows.length}
+              count={films.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onChangePage={handleChangePage}

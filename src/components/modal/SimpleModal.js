@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SimpleModal({ films, title, buttonName }) {
+export default function SimpleModal({ listFilms, city, title, buttonName }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
@@ -41,7 +41,7 @@ export default function SimpleModal({ films, title, buttonName }) {
         <div className={classes.paper}>
             <h2 id="simple-modal-title">{title}</h2>
             <div>
-                <TableFilms films={films} />
+                <TableFilms listFilms={listFilms} city={city} />
             </div>
         </div>
     );
