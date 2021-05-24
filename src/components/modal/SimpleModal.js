@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
@@ -22,26 +22,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleModal({ listFilms, title, buttonName }) {
+
+export default function SimpleModal({ films, title, buttonName }) {
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
-    // const [modalStyle] = React.useState(getModalStyle);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
-        setOpen(true);
+        setOpen(true)
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
+
     const body = (
         // <div style={modalStyle} className={classes.paper}>
         <div className={classes.paper}>
             <h2 id="simple-modal-title">{title}</h2>
             <div>
-            <TableFilms listFilms={listFilms} />
+                <TableFilms films={films} />
             </div>
         </div>
     );

@@ -39,11 +39,41 @@ function createData(title, production, type, genre, language, date, plot, addres
   };
 }
 
+const requestData = async (query) => {
+  const SparqlClient = require('sparql-http-client')
+  const endpointUrl = 'http://localhost:3030/FindYourScene'
+
+  const client = new SparqlClient({ endpointUrl })
+  const stream = await client.query.select(query)
+  var tab = []
+
+  stream.on('data', row => {
+      tab.push(row)
+  })
+
+  stream.on('error', err => {
+      console.error(err);
+  })
+
+  return tab
+}
+
 function Row(props) {
   const { row, adresse } = props;
   const [open, setOpen] = React.useState(false);
 
   const classes = useRowStyles();
+
+  const showDetails = () => {
+    const query = `
+
+    `
+    requestData(query).then(function(result){
+
+    })
+
+    setOpen(!open)
+  }
 
   return (
     <React.Fragment>
@@ -142,7 +172,7 @@ const rows = [
   createData('Dragon Ball Super', "Studio Baba", "Shojo", "Combat", "Française", "2020-01-05", "Charly inherited the family butcher's shop. As she prepares to sell it, Martial, the boss's former clerk, decides to fight to get the business back. These two characters who are completely opposed will be brought to cohabit.", "6 allée Robert", ["George", "Brassens", "Eric"], ["Bernard", "Robert"])
 ];
 
-export default function TableFilms({ listFilms }) {
+export default function TableFilms({ parisFilms }) {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
@@ -155,6 +185,8 @@ export default function TableFilms({ listFilms }) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  console.log("PARIS:", parisFilms)
 
   return (
     <TableContainer className="table" component={Paper}>
