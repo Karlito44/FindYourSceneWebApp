@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# FindYourScene
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ce projet s'est réalisé dans le cadre du Master ICE à l'université Toulouse Jean Jaurès. Il a pour but de proposer une application permettant de trouver la scène de votre film préféré ou bien d'un film en général en proposant une liste de films associé à une ville de France.
 
 ## Available Scripts
 

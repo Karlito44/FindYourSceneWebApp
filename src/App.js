@@ -8,6 +8,7 @@ class App extends Component {
     this.state = { parisFilms: null, montpellierFilms: null, suresnesFilms: null };
   }
 
+  // Lancements des requêtes sparql pour construire nos données
   async componentDidMount() {
     const parisQuery = `
     PREFIX : <http://www.semanticweb.org/FindYourScene#>
@@ -90,6 +91,7 @@ class App extends Component {
     this.requestData(suresnesQuery).then(res => this.setState({ suresnesFilms: res }))
   }
 
+  // Fonction permettant de lancer une requête sparql et de retourner son contenu
   async requestData(query) {
     var tab = new Array();
     const SparqlClient = require('sparql-http-client')
